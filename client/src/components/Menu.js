@@ -1,19 +1,19 @@
 const Menu = [
     {
         label: "Home",
-        pathname: "/"
+        pathname: "/coronavirus/"
     },
     {
         label: "By Country",
-        pathname: "/by-country"
+        pathname: "/coronavirus/by-country"
     },
     {
         label: "By State",
-        pathname: "/by-state"
+        pathname: "/coronavirus/by-state"
     },
     {
         label: "Projections",
-        pathname: "/projections"
+        pathname: "/coronavirus/projections"
     }
 ];
 

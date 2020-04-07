@@ -1,4 +1,4 @@
-# Coronavirus
+# Coronavirus   
 
 To use this app, you need to run the frontend and backend.
 
@@ -216,7 +216,7 @@ To use this app, you need to run the frontend and backend.
         listen 80;
         listen [::]:80;
 
-        server_name coronavirus.premierdirectcare.net;
+        server_name neighborleague.us;
 
         location / {
             proxy_pass http://localhost:5040/;

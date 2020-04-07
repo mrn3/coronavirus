@@ -23,10 +23,10 @@ export default props => {
 	return (
 		<Router history={history}>
 			<Switch>
-				<Route exact path="/" component={Home} />
-				<Route exact path="/by-country" component={ByCountry} />
-				<Route exact path="/by-state" component={ByState} />
-				<Route exact path="/projections" component={Projections} />
+				<Route exact path="/coronavirus/" component={Home} />
+				<Route exact path="/coronavirus/by-country" component={ByCountry} />
+				<Route exact path="/coronavirus/by-state" component={ByState} />
+				<Route exact path="/coronavirus/projections" component={Projections} />
 			</Switch>
 		</Router>
 	)

@@ -42,11 +42,11 @@ export default function Footer(props) {
                         <div className={styles.linkHeader}>
                             Bar Charts
                         </div>
-                        <Link to='/by-country' className={styles.link}>
+                        <Link to='/coronavirus/by-country' className={styles.link}>
                             By Country
                         </Link>
                         <br />
-                        <Link to='/by-state' className={styles.link}>
+                        <Link to='/coronavirus/by-state' className={styles.link}>
                             By State
                         </Link>
                         <br />
@@ -58,7 +58,7 @@ export default function Footer(props) {
                         <div className={styles.linkHeader}>
                             Line Charts
                         </div>
-                        <Link to='/projections' className={styles.link}>
+                        <Link to='/coronavirus/projections' className={styles.link}>
                             Projections
                         </Link>
                     </div>

@@ -3,7 +3,7 @@
     "dialect": "postgres",
     "host": "localhost",
     "port": 5432,
-    "database": "secondmetrics",
+    "database": "coronavirus",
     "operatorsAliases": {
       "$and": "Op.and",
       "$or": "Op.or",
@@ -18,7 +18,7 @@
     "dialect": "postgres",
     "host": "localhost",
     "port": 5432,
-    "database": "secondmetrics",
+    "database": "coronavirus",
     "username": "root",
     "password": null,
     "operatorsAliases": {

@@ -80,8 +80,8 @@ export default function TopBar(props) {
 
 	const getCurrentParentPage = () => {
 		let filteredArray = Menu.map((item, index) => {
-			let currentPathParentPage = props.currentPath.split('/')[1];
-			let itemPathParentPage = item.pathname.split('/')[1];
+			let currentPathParentPage = props.currentPath.split('/')[2];
+			let itemPathParentPage = item.pathname.split('/')[2];
 			if (currentPathParentPage === itemPathParentPage) {
 				return index;
 			} else {
