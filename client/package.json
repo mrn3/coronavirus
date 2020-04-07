@@ -11,6 +11,7 @@
     "constate": "^1.2.0",
     "downshift": "^3.2.12",
     "moment": "^2.24.0",
+    "papaparse": "^5.2.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-ga": "^2.6.0",

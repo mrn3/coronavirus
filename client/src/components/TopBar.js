@@ -98,7 +98,7 @@ export default function TopBar(props) {
 					<Grid container item xs={12} className={classes.flex} alignItems="baseline">
 						<Link to='/' className={classes.link}>
 							<div className={classes.logoContainer}>
-								<img className={classes.logo} src={logo} alt="Coronavirus Stats Logo" />
+								<img className={classes.logo} src={logo} alt="Coronavirus Statistics Logo" />
 							</div>
 						</Link>
 						{!props.noTabs && (

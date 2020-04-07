@@ -66,15 +66,15 @@ export default function Footer(props) {
                 <Grid container item xs={12} sm={6} className={styles.flex} alignItems="baseline">
                     <div className={styles.linkArea}>
                         <div className={styles.linkHeader}>
-                            Coronavirus Stats
+                            Coronavirus Statistics
                         </div>
                         <div className={styles.bodyText}>
-                            Coronavirus Stats is a tool to help you analyze and understand the spread of the Coronavirus
-                            (COVID-19) disease.
+                            Coronavirus Statistics is a tool to help you analyze and understand the spread of the Coronavirus
+                            (COVID-19) disease in various countries of the world and states in the US.
                         </div>
                     </div>
                     <div className={styles.copyright}>
-                        Copyright © 2020 Coronavirus Stats
+                        Copyright © 2020 Coronavirus Statistics
                     </div>
                 </Grid>
 

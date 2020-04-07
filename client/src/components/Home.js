@@ -82,7 +82,7 @@ export default function Home(props) {
 			<div className={styles.smallContainer}>
 				<div className={styles.blockCenter}>
 					<div className={styles.title}>
-						Welcome To Coronavirus Stats!
+						Welcome To Coronavirus Statistics!
 					</div>
 					<div className={styles.subtitle}>
 						Use the menu above to find all kinds of statistics 
