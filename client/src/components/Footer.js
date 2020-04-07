@@ -42,12 +42,16 @@ export default function Footer(props) {
                         <div className={styles.linkHeader}>
                             About
                         </div>
-                        <Link to='/country-cases' className={styles.link}>
-                            Country Cases
+                        <Link to='/by-country' className={styles.link}>
+                            By Country
                         </Link>
                         <br />
-                        <Link to='/our-story' className={styles.link}>
-                            Our Story
+                        <Link to='/by-state' className={styles.link}>
+                            By State
+                        </Link>
+                        <br />
+                        <Link to='/projects' className={styles.link}>
+                            Projections
                         </Link>
                     </div>
                 </Grid>
@@ -56,28 +60,20 @@ export default function Footer(props) {
                         <div className={styles.linkHeader}>
                             Legal
                         </div>
-                        <Link to='/privacy' className={styles.link}>
-                            Privacy Policy
-                        </Link>
-                        <br />
-                        <Link to='/terms' className={styles.link}>
-                            Terms and Conditions
-                        </Link>
                     </div>
                 </Grid>
                 <Grid container item xs={12} sm={6} className={styles.flex} alignItems="baseline">
                     <div className={styles.linkArea}>
                         <div className={styles.linkHeader}>
-                            Second Metrics
+                            Coronavirus Stats
                         </div>
                         <div className={styles.bodyText}>
-                            Second Metrics is a tool to help you analyze your digital marketing strategy to determine 
-                            whether it is effectively increasing your bottom line. It helps you to rate your current 
-                            marketing strategy and will recommend actions for you to take to improve how you market your business
+                            Coronavirus Stats is a tool to help you analyze and understand the spread of the Coronavirus
+                            (COVID-19) disease.
                         </div>
                     </div>
                     <div className={styles.copyright}>
-                        Copyright © 2019 Second Metrics
+                        Copyright © 2019 Coronavirus Stats
                     </div>
                 </Grid>
                     

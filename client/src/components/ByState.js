@@ -28,20 +28,7 @@ export default function OurStory(props) {
                 We'll start from the beginning
             </div>
             <div>
-                <p>
-                    Second Metrics is a tool to help you analyze your digital marketing strategy to determine whether it 
-                    is effectively increasing your bottom line. It helps you to rate your current marketing strategy and 
-                    will recommend actions for you to take to improve how you market your business.
-                </p>
-                <p>
-                    Most agencies won’t tell you that they’re wasting your money. So, we will.
-                </p>
-                <p>
-                    Second Metrics watches the watchers.  It helps you make sure your digital marketing strategy is being followed.
-                </p>
-                <p>
-                    You can't improve what you don't measure.
-                </p>
+                
             </div>
         </Page>
     )

@@ -4,16 +4,16 @@ const Menu = [
         pathname: "/"
     },
     {
-        label: "Country Cases",
-        pathname: "/country-cases"
+        label: "By Country",
+        pathname: "/by-country"
     },
     {
-        label: "Our Story",
-        pathname: "/our-story"
+        label: "By State",
+        pathname: "/by-state"
     },
     {
-        label: "Analyze",
-        pathname: "/analyze/business"
+        label: "Projects",
+        pathname: "/projections"
     }
 ];
 
