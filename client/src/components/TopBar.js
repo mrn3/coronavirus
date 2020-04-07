@@ -14,7 +14,7 @@ import Tab from '@material-ui/core/Tab';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-const logo = require('../images/png/background.png');
+const logo = require('../images/png/coronavirus_logo.png');
 
 const useStyles = makeStyles(theme => ({
 	appBar: {
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 		color: 'inherit'
 	},
 	logo: {
-		width: 160
+		width: 220
 	},
 	logoContainer: {
 		padding: 14

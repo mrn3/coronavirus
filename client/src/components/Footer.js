@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
-	footerContainer: {
+    footerContainer: {
         backgroundColor: '#333',
         width: '100%',
         marginTop: 'auto',
@@ -19,11 +19,11 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: 10
     },
     link: {
-		textDecoration: 'none',
-		color: '#ccc'
+        textDecoration: 'none',
+        color: '#ccc'
     },
     bodyText: {
-		color: '#ccc'
+        color: '#ccc'
     },
     copyright: {
         color: '#ccc',
@@ -40,7 +40,7 @@ export default function Footer(props) {
                 <Grid container item xs={6} sm={3} className={styles.flex} alignItems="baseline">
                     <div className={styles.linkArea}>
                         <div className={styles.linkHeader}>
-                            About
+                            Bar Charts
                         </div>
                         <Link to='/by-country' className={styles.link}>
                             By Country
@@ -50,16 +50,17 @@ export default function Footer(props) {
                             By State
                         </Link>
                         <br />
-                        <Link to='/projects' className={styles.link}>
-                            Projections
-                        </Link>
+
                     </div>
                 </Grid>
                 <Grid container item xs={6} sm={3} className={styles.flex} alignItems="baseline">
                     <div className={styles.linkArea}>
                         <div className={styles.linkHeader}>
-                            Legal
+                            Line Charts
                         </div>
+                        <Link to='/projections' className={styles.link}>
+                            Projections
+                        </Link>
                     </div>
                 </Grid>
                 <Grid container item xs={12} sm={6} className={styles.flex} alignItems="baseline">
@@ -73,10 +74,10 @@ export default function Footer(props) {
                         </div>
                     </div>
                     <div className={styles.copyright}>
-                        Copyright © 2019 Coronavirus Stats
+                        Copyright © 2020 Coronavirus Stats
                     </div>
                 </Grid>
-                    
+
             </Grid>
         </div>
     )

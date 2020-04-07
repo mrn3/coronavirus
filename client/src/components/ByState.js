@@ -20,7 +20,7 @@ export default function OurStory(props) {
     const currentPath = props.location.pathname;
     const styles = useStyles();
     return (
-        <Page currentPath={currentPath} includeBackgroundGraphic={true}>
+        <Page currentPath={currentPath} includeBackgroundGraphic={false}>
             <div className={styles.title}>
                 Our Story
             </div>

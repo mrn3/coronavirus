@@ -12,7 +12,7 @@ const Menu = [
         pathname: "/by-state"
     },
     {
-        label: "Projects",
+        label: "Projections",
         pathname: "/projections"
     }
 ];
