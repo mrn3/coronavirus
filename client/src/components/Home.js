@@ -1,10 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
 import Page from './Page';
-import { useMainContext } from "./MainContext";
 
 const useStyles = makeStyles(theme => ({
 	row: {
@@ -66,16 +62,6 @@ const useStyles = makeStyles(theme => ({
 export default function Home(props) {
 	const currentPath = props.location.pathname;
 	const styles = useStyles();
-	const { 
-		url, 
-		handleUrlChange, 
-		urlInvalid, 
-		handleUrlBlur 
-	} = useMainContext();
-
-	const goToAnalyze = (event) => {
-		props.history.push("/analyze/business");
-	};
 
 	return (
 		<Page currentPath={currentPath} contentWidth={700} includeBackgroundGraphic={true}>

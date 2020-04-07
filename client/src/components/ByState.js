@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,7 +10,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import unirest from "unirest";
-import moment from "moment";
 import {
     BarChart,
     Bar,
@@ -21,17 +19,12 @@ import {
     Tooltip,
     Legend,
     ResponsiveContainer,
-    LineChart,
-    Line
 } from "recharts";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Papa from "papaparse";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Page from './Page';
 
 const useStyles = makeStyles(theme => ({
@@ -68,16 +61,6 @@ const ByState = (props) => {
     const [sortBy, setSortBy] = React.useState("cases");
     const [selectedDate, setSelectedDate] = React.useState("");
     const [selectedState, setSelectedState] = React.useState("All");
-    const [projectLastDays, setProjectLastDays] = React.useState(7);
-    const [projectFutureDays, setProjectFutureDays] = React.useState(7);
-    const [shown, setShown] = React.useState({
-        cases: true,
-        casesLinear: true,
-        casesPercentage: true,
-        deaths: false,
-        deathsLinear: false,
-        deathsPercentage: false
-    });
 
     const getDateArray = statArray => {
         let returnDateArray = [];
@@ -114,18 +97,6 @@ const ByState = (props) => {
             }
         }
         return returnMaxDate;
-    };
-
-    const handleShownChange = event => {
-        setShown({ ...shown, [event.target.name]: event.target.checked });
-    };
-
-    const handleProjectLastDaysChange = event => {
-        setProjectLastDays(event.target.value);
-    };
-
-    const handleProjectFutureDaysChange = event => {
-        setProjectFutureDays(event.target.value);
     };
 
     const handleSelectedStateChange = event => {
@@ -170,127 +141,6 @@ const ByState = (props) => {
             a[sortBy] < b[sortBy] ? 1 * sortAscending : -1 * sortAscending
         );
     //.slice(0, 40);
-
-    const getActualsLineChartRowArray = statArray => {
-        return statArray
-            .filter(stat => stat.state === selectedState)
-            .map(stat => {
-                return {
-                    state: stat.state,
-                    date: stat.date,
-                    dateUnix: moment(stat.date).unix(),
-                    cases: stat.cases,
-                    deaths: stat.deaths
-                };
-            })
-            .sort((a, b) => (a.date < b.date ? -1 : 1));
-    };
-    const actualsLineChartRowArray = getActualsLineChartRowArray(statArray);
-
-    let casesPerDayLinear;
-    let deathsPerDayLinear;
-    let casesPerDayPercentage;
-    let deathsPerDayPercentage;
-
-    let casesLinearLabel;
-    let deathsLinearLabel;
-    let casesPercentageLabel;
-    let deathsPercentageLabel;
-
-    const getProjectionLineChartRowArray = statArray => {
-        let returnProjectionLineChartRowArray = [];
-        if (selectedState !== "All") {
-            let maxDate = getMaxDate(statArray);
-            let maxDateMoment = moment(maxDate);
-            let maxDateMinusMoment = moment(maxDateMoment).subtract(
-                projectLastDays,
-                "days"
-            );
-
-            let projectionEndDate = moment()
-                .add(projectFutureDays, "days")
-                .format("YYYY-MM-DD");
-
-            //get the start and end values to calculate slope
-            let maxDateCases = 0;
-            let maxDateDeaths = 0;
-            let maxDateMinusCases = 0;
-            let maxDateMinusDeaths = 0;
-            for (let stat of statArray) {
-                if (stat.state === selectedState) {
-                    if (maxDateMoment.isSame(stat.date)) {
-                        maxDateCases = stat.cases;
-                        maxDateDeaths = stat.deaths;
-                    } else if (maxDateMinusMoment.isSame(stat.date)) {
-                        maxDateMinusCases = stat.cases;
-                        maxDateMinusDeaths = stat.deaths;
-                    }
-                }
-            }
-            casesPerDayLinear = Math.round(
-                (maxDateCases - maxDateMinusCases) / projectLastDays
-            );
-            deathsPerDayLinear = Math.round(
-                (maxDateDeaths - maxDateMinusDeaths) / projectLastDays
-            );
-            casesPerDayPercentage =
-                1 +
-                (maxDateCases - maxDateMinusCases) /
-                (maxDateMinusCases || 1) /
-                projectLastDays;
-            deathsPerDayPercentage =
-                1 +
-                (maxDateDeaths - maxDateMinusDeaths) /
-                (maxDateMinusDeaths || 1) /
-                projectLastDays;
-
-            casesLinearLabel = `Projected Cases Linear (${casesPerDayLinear}/day)`;
-            deathsLinearLabel = `Projected Deaths Linear (${deathsPerDayLinear}/day)`;
-            casesPercentageLabel = `Projected Cases Percentage (${Math.round(
-                (casesPerDayPercentage - 1) * 100
-            )}%/day)`;
-            deathsPercentageLabel = `Projected Deaths Percentage (${Math.round(
-                (deathsPerDayPercentage - 1) * 100
-            )}%/day)`;
-
-            //loop through dates
-            let casesLinear = maxDateCases;
-            let casesPercentage = maxDateCases;
-            let deathsLinear = maxDateDeaths;
-            let deathsPercentage = maxDateDeaths;
-            for (
-                let m = moment(maxDateMoment);
-                m.isBefore(projectionEndDate, "day");
-                m.add(1, "days")
-            ) {
-                let currentDate = m.format("YYYY-MM-DD");
-                returnProjectionLineChartRowArray.push({
-                    state: selectedState,
-                    date: currentDate,
-                    dateUnix: moment(currentDate).unix(),
-                    casesLinear,
-                    casesPercentage,
-                    deathsLinear,
-                    deathsPercentage
-                });
-
-                //increment last
-                casesLinear += casesPerDayLinear;
-                deathsLinear += deathsPerDayLinear;
-                casesPercentage = Math.round(casesPercentage * casesPerDayPercentage);
-                deathsPercentage = Math.round(
-                    deathsPercentage * deathsPerDayPercentage
-                );
-            }
-        }
-        return returnProjectionLineChartRowArray;
-    };
-    const projectionLineChartRowArray = getProjectionLineChartRowArray(statArray);
-
-    const lineChartRows = [
-        ...actualsLineChartRowArray,
-        ...projectionLineChartRowArray
-    ];
 
     const columns = [
         { id: "state", label: "State", minWidth: 100 },
@@ -484,8 +334,8 @@ const ByState = (props) => {
                                     verticalAlign="top"
                                     align="center"
                                 />
-                                <Bar dataKey="deaths" name="Deaths" stackId="1" fill="#e33" />
-                                <Bar dataKey="cases" name="Cases" stackId="1" fill="#f80" />
+                                <Bar dataKey="deaths" name="Deaths" stackId="1" fill="#f51" />
+                                <Bar dataKey="cases" name="Cases" stackId="1" fill="#fd3" />
                             </BarChart>
                         </ResponsiveContainer>
 

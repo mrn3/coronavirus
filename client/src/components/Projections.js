@@ -1,23 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
 import unirest from "unirest";
 import moment from "moment";
 import {
-    BarChart,
-    Bar,
     XAxis,
     YAxis,
-    CartesianGrid,
     Tooltip,
     Legend,
     ResponsiveContainer,
@@ -29,7 +17,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Papa from "papaparse";
-import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Page from './Page';
@@ -63,11 +50,7 @@ const Projections = (props) => {
     const currentPath = props.location.pathname;
     const [statArray, setStatArray] = useState([]);
     const classes = useStyles();
-    const [page, setPage] = React.useState(0);
-    const [tableRowsPerPage, setRowsPerPage] = React.useState(10);
-    const [sortBy, setSortBy] = React.useState("cases");
-    const [selectedDate, setSelectedDate] = React.useState("");
-    const [selectedState, setSelectedState] = React.useState("All");
+    const [selectedState, setSelectedState] = React.useState("Alabama");
     const [projectLastDays, setProjectLastDays] = React.useState(7);
     const [projectFutureDays, setProjectFutureDays] = React.useState(7);
     const [shown, setShown] = React.useState({
@@ -78,19 +61,6 @@ const Projections = (props) => {
         deathsLinear: false,
         deathsPercentage: false
     });
-
-    const getDateArray = statArray => {
-        let returnDateArray = [];
-        for (let stat of statArray) {
-            if (!returnDateArray.includes(stat.date)) {
-                returnDateArray.push(stat.date);
-            }
-        }
-        returnDateArray.sort();
-        returnDateArray.reverse();
-        return returnDateArray;
-    };
-    const dateArray = getDateArray(statArray);
 
     const getStateArray = statArray => {
         let returnStateArray = [];
@@ -131,45 +101,6 @@ const Projections = (props) => {
     const handleSelectedStateChange = event => {
         setSelectedState(event.target.value);
     };
-
-    const handleSelectedDateChange = event => {
-        setSelectedDate(event.target.value);
-    };
-
-    const handleSortByChange = event => {
-        setSortBy(event.target.value);
-    };
-
-    const handleRowClick = row => {
-        setSelectedState(row.state);
-    };
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = event => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
-
-    const sortAscending = sortBy === "state" ? -1 : 1;
-
-    const tableRows = statArray
-        .filter(stat => selectedState === stat.state || selectedState === "All")
-        .filter(stat => selectedDate === stat.date)
-        .sort((a, b) =>
-            a[sortBy] < b[sortBy] ? 1 * sortAscending : -1 * sortAscending
-        );
-
-    //just get top 10
-    const chartRows = statArray
-        .filter(stat => selectedState === stat.state || selectedState === "All")
-        .filter(stat => selectedDate === stat.date)
-        .sort((a, b) =>
-            a[sortBy] < b[sortBy] ? 1 * sortAscending : -1 * sortAscending
-        );
-    //.slice(0, 40);
 
     const getActualsLineChartRowArray = statArray => {
         return statArray
@@ -292,14 +223,6 @@ const Projections = (props) => {
         ...projectionLineChartRowArray
     ];
 
-    const columns = [
-        { id: "state", label: "State", minWidth: 100 },
-        { id: "date", label: "Date", minWidth: 50 },
-        { id: "cases", label: "Cases", minWidth: 60 },
-        { id: "deaths", label: "Deaths", minWidth: 60 },
-        { id: "deathRate", label: "Death Rate %", minWidth: 60 }
-    ];
-
     async function fetchData() {
         let req = unirest(
             "GET",
@@ -324,8 +247,6 @@ const Projections = (props) => {
                         ) / 100
                 };
             });
-            let maxDate = getMaxDate(statArray);
-            setSelectedDate(maxDate);
             setStatArray(statArray);
         });
     }
@@ -340,9 +261,9 @@ const Projections = (props) => {
         <Page currentPath={currentPath} contentWidth={1600} includeBackgroundGraphic={false}>
             <div className={classes.root}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={3}>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12}>
                                 <FormControl variant="outlined" className={classes.formControl}>
                                     <InputLabel id="selectedState">State</InputLabel>
                                     <Select
@@ -363,282 +284,187 @@ const Projections = (props) => {
                                     </Select>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <FormControl variant="outlined" className={classes.formControl}>
-                                    <InputLabel id="selectedDate">Date</InputLabel>
-                                    <Select
-                                        labelId="selectedDate"
-                                        id="selectedDate"
-                                        value={selectedDate}
-                                        onChange={handleSelectedDateChange}
-                                        label="Date"
-                                    >
-                                        {dateArray.map(date => (
-                                            <MenuItem key={date} value={date}>
-                                                {date}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <FormControl variant="outlined" className={classes.formControl}>
-                                    <InputLabel id="sortBy">Sort By</InputLabel>
-                                    <Select
-                                        labelId="sortBy"
-                                        id="sortBy"
-                                        value={sortBy}
-                                        onChange={handleSortByChange}
-                                        label="Sort By"
-                                    >
-                                        {columns
-                                            .filter(column => column.id !== "date")
-                                            .map(column => (
-                                                <MenuItem key={column.id} value={column.id}>
-                                                    {column.label}
-                                                </MenuItem>
-                                            ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
                         </Grid>
-                        <Paper>
-                            <TableContainer className={classes.tableContainer}>
-                                <Table stickyHeader aria-label="sticky table">
-                                    <TableHead>
-                                        <TableRow>
-                                            {columns.map(column => (
-                                                <TableCell
-                                                    key={column.id}
-                                                    align={column.align}
-                                                    style={{ minWidth: column.minWidth }}
-                                                >
-                                                    {column.label}
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {tableRows
-                                            .slice(
-                                                page * tableRowsPerPage,
-                                                page * tableRowsPerPage + tableRowsPerPage
-                                            )
-                                            .map(row => {
-                                                return (
-                                                    <TableRow
-                                                        hover
-                                                        role="checkbox"
-                                                        tabIndex={-1}
-                                                        key={row.state}
-                                                        onClick={() => {
-                                                            handleRowClick(row);
-                                                        }}
-                                                    >
-                                                        {columns.map(column => {
-                                                            const value = row[column.id];
-                                                            return (
-                                                                <TableCell key={column.id} align={column.align}>
-                                                                    {column.format && typeof value === "number"
-                                                                        ? column.format(value)
-                                                                        : value}
-                                                                </TableCell>
-                                                            );
-                                                        })}
-                                                    </TableRow>
-                                                );
-                                            })}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            <TablePagination
-                                rowsPerPageOptions={[10, 25, 100]}
-                                component="div"
-                                count={tableRows.length}
-                                rowsPerPage={tableRowsPerPage}
-                                page={page}
-                                onChangePage={handleChangePage}
-                                onChangeRowsPerPage={handleChangeRowsPerPage}
+                        <Grid item xs={12}>
+                            <h3>Projection Based On Last</h3>
+                            <FormControl variant="outlined" className={classes.formControl}>
+                                <InputLabel id="projectLastDays">Number of Days</InputLabel>
+                                <Select
+                                    labelId="projectLastDays"
+                                    id="projectLastDays"
+                                    value={projectLastDays}
+                                    onChange={handleProjectLastDaysChange}
+                                    label="Number Of Days"
+                                >
+                                    <MenuItem key={1} value={1}>
+                                        1
+                    </MenuItem>
+                                    <MenuItem key={2} value={2}>
+                                        2
+                    </MenuItem>
+                                    <MenuItem key={3} value={3}>
+                                        3
+                    </MenuItem>
+                                    <MenuItem key={4} value={4}>
+                                        4
+                    </MenuItem>
+                                    <MenuItem key={5} value={5}>
+                                        5
+                    </MenuItem>
+                                    <MenuItem key={6} value={6}>
+                                        6
+                    </MenuItem>
+                                    <MenuItem key={7} value={7}>
+                                        7
+                    </MenuItem>
+                                    <MenuItem key={10} value={10}>
+                                        10
+                    </MenuItem>
+                                    <MenuItem key={14} value={14}>
+                                        14
+                    </MenuItem>
+                                    <MenuItem key={30} value={30}>
+                                        30
+                    </MenuItem>
+                                    <MenuItem key={60} value={60}>
+                                        60
+                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <h3>Project Out Into Future</h3>
+                            <FormControl variant="outlined" className={classes.formControl}>
+                                <InputLabel id="projectFutureDays">Number of Days</InputLabel>
+                                <Select
+                                    labelId="projectFutureDays"
+                                    id="projectFutureDays"
+                                    value={projectFutureDays}
+                                    onChange={handleProjectFutureDaysChange}
+                                    label="Number Of Days"
+                                >
+                                    <MenuItem key={1} value={1}>
+                                        1
+                    </MenuItem>
+                                    <MenuItem key={2} value={2}>
+                                        2
+                    </MenuItem>
+                                    <MenuItem key={3} value={3}>
+                                        3
+                    </MenuItem>
+                                    <MenuItem key={4} value={4}>
+                                        4
+                    </MenuItem>
+                                    <MenuItem key={5} value={5}>
+                                        5
+                    </MenuItem>
+                                    <MenuItem key={6} value={6}>
+                                        6
+                    </MenuItem>
+                                    <MenuItem key={7} value={7}>
+                                        7
+                    </MenuItem>
+                                    <MenuItem key={10} value={10}>
+                                        10
+                    </MenuItem>
+                                    <MenuItem key={14} value={14}>
+                                        14
+                    </MenuItem>
+                                    <MenuItem key={30} value={30}>
+                                        30
+                    </MenuItem>
+                                    <MenuItem key={60} value={60}>
+                                        60
+                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <h2>Show</h2>
+                        <Grid item xs={12}>
+
+                            <h3>Cases</h3>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.cases}
+                                        onChange={handleShownChange}
+                                        name="cases"
+                                        color="primary"
+                                    />
+                                }
+                                label="Actual Cases"
                             />
-                        </Paper>
+                            <br />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.casesLinear}
+                                        onChange={handleShownChange}
+                                        name="casesLinear"
+                                        color="primary"
+                                    />
+                                }
+                                label={casesLinearLabel}
+                            />
+                            <br />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.casesPercentage}
+                                        onChange={handleShownChange}
+                                        name="casesPercentage"
+                                        color="primary"
+                                    />
+                                }
+                                label={casesPercentageLabel}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <h3>Deaths</h3>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.deaths}
+                                        onChange={handleShownChange}
+                                        name="deaths"
+                                        color="primary"
+                                    />
+                                }
+                                label="Actual Deaths"
+                            />
+                            <br />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.deathsLinear}
+                                        onChange={handleShownChange}
+                                        name="deathsLinear"
+                                        color="primary"
+                                    />
+                                }
+                                label={deathsLinearLabel}
+                            />
+                            <br />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.deathsPercentage}
+                                        onChange={handleShownChange}
+                                        name="deathsPercentage"
+                                        color="primary"
+                                    />
+                                }
+                                label={deathsPercentageLabel}
+                            />
+                        </Grid>
                     </Grid>
 
-                    <Grid item xs={12} sm={6} style={{ overflow: "scroll", height: 800 }}>
+                    <Grid item xs={12} sm={9} style={{ overflow: "scroll", height: 800 }}>
 
                         <Grid container spacing={3}>
-                            <Grid item xs={12} sm={3}>
-                                Projection Based On Last
-              </Grid>
-                            <Grid item xs={12} sm={3}>
-                                <FormControl variant="outlined" className={classes.formControl}>
-                                    <InputLabel id="projectLastDays">Number of Days</InputLabel>
-                                    <Select
-                                        labelId="projectLastDays"
-                                        id="projectLastDays"
-                                        value={projectLastDays}
-                                        onChange={handleProjectLastDaysChange}
-                                        label="Number Of Days"
-                                    >
-                                        <MenuItem key={1} value={1}>
-                                            1
-                    </MenuItem>
-                                        <MenuItem key={2} value={2}>
-                                            2
-                    </MenuItem>
-                                        <MenuItem key={3} value={3}>
-                                            3
-                    </MenuItem>
-                                        <MenuItem key={4} value={4}>
-                                            4
-                    </MenuItem>
-                                        <MenuItem key={5} value={5}>
-                                            5
-                    </MenuItem>
-                                        <MenuItem key={6} value={6}>
-                                            6
-                    </MenuItem>
-                                        <MenuItem key={7} value={7}>
-                                            7
-                    </MenuItem>
-                                        <MenuItem key={10} value={10}>
-                                            10
-                    </MenuItem>
-                                        <MenuItem key={14} value={14}>
-                                            14
-                    </MenuItem>
-                                        <MenuItem key={30} value={30}>
-                                            30
-                    </MenuItem>
-                                        <MenuItem key={60} value={60}>
-                                            60
-                    </MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={3}>
-                                Project Out Into Future
-              </Grid>
-                            <Grid item xs={12} sm={3}>
-                                <FormControl variant="outlined" className={classes.formControl}>
-                                    <InputLabel id="projectFutureDays">Number of Days</InputLabel>
-                                    <Select
-                                        labelId="projectFutureDays"
-                                        id="projectFutureDays"
-                                        value={projectFutureDays}
-                                        onChange={handleProjectFutureDaysChange}
-                                        label="Number Of Days"
-                                    >
-                                        <MenuItem key={1} value={1}>
-                                            1
-                    </MenuItem>
-                                        <MenuItem key={2} value={2}>
-                                            2
-                    </MenuItem>
-                                        <MenuItem key={3} value={3}>
-                                            3
-                    </MenuItem>
-                                        <MenuItem key={4} value={4}>
-                                            4
-                    </MenuItem>
-                                        <MenuItem key={5} value={5}>
-                                            5
-                    </MenuItem>
-                                        <MenuItem key={6} value={6}>
-                                            6
-                    </MenuItem>
-                                        <MenuItem key={7} value={7}>
-                                            7
-                    </MenuItem>
-                                        <MenuItem key={10} value={10}>
-                                            10
-                    </MenuItem>
-                                        <MenuItem key={14} value={14}>
-                                            14
-                    </MenuItem>
-                                        <MenuItem key={30} value={30}>
-                                            30
-                    </MenuItem>
-                                        <MenuItem key={60} value={60}>
-                                            60
-                    </MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
+
                             <Grid item xs={12} sm={12}>
-                                Show:
-                <FormGroup row>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={shown.cases}
-                                                onChange={handleShownChange}
-                                                name="cases"
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Actual Cases"
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={shown.casesLinear}
-                                                onChange={handleShownChange}
-                                                name="casesLinear"
-                                                color="primary"
-                                            />
-                                        }
-                                        label={casesLinearLabel}
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={shown.casesPercentage}
-                                                onChange={handleShownChange}
-                                                name="casesPercentage"
-                                                color="primary"
-                                            />
-                                        }
-                                        label={casesPercentageLabel}
-                                    />
-                                </FormGroup>
-                                <FormGroup row>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={shown.deaths}
-                                                onChange={handleShownChange}
-                                                name="deaths"
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Actual Deaths"
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={shown.deathsLinear}
-                                                onChange={handleShownChange}
-                                                name="deathsLinear"
-                                                color="primary"
-                                            />
-                                        }
-                                        label={deathsLinearLabel}
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={shown.deathsPercentage}
-                                                onChange={handleShownChange}
-                                                name="deathsPercentage"
-                                                color="primary"
-                                            />
-                                        }
-                                        label={deathsPercentageLabel}
-                                    />
-                                </FormGroup>
-                            </Grid>
-                            <Grid item xs={12} sm={12}>
-                                <ResponsiveContainer width="100%" aspect={15.0 / 10.0}>
+                                <ResponsiveContainer width="100%" aspect={15.0 / 9.0}>
                                     <LineChart
                                         data={lineChartRows}
                                         margin={{
