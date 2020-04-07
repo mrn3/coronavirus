@@ -1,4 +1,4 @@
-# Second Metrics
+# Coronavirus
 
 To use this app, you need to run the frontend and backend.
 
@@ -44,11 +44,11 @@ To use this app, you need to run the frontend and backend.
 
 1. Create database
     ```
-    createdb secondmetrics
+    createdb coronavirus
     ```
 1. Connect to database
     ```
-    psql secondmetrics
+    psql coronavirus
     ```
 1. Show databases and tables
     ```
@@ -208,7 +208,7 @@ To use this app, you need to run the frontend and backend.
 ### Configure nginx
 1. Open config file for editing
     ```
-    sudo vi /etc/nginx/conf.d/secondmetrics.conf
+    sudo vi /etc/nginx/conf.d/coronavirus.conf
     ```
 1. Add content to config file in vim
     ```
@@ -216,10 +216,10 @@ To use this app, you need to run the frontend and backend.
         listen 80;
         listen [::]:80;
 
-        server_name secondmetrics.com;
+        server_name coronavirus.premierdirectcare.net;
 
         location / {
-            proxy_pass http://localhost:5030/;
+            proxy_pass http://localhost:5040/;
             proxy_buffering off;
             proxy_set_header X-Real-IP $remote_addr;
         }
@@ -244,11 +244,11 @@ To use this app, you need to run the frontend and backend.
     ```
 1. Clone the repo
     ```
-    git clone git@github.com:mrn3/secondmetrics.git
+    git clone git@github.com:mrn3/coronavirus.git
     ```
 1. Go into the project directory
     ```
-    cd secondmetrics
+    cd coronavirus
     ```
 1. Create .env file and open for editing
     ```
@@ -257,7 +257,7 @@ To use this app, you need to run the frontend and backend.
 1. Add content to .env file
     ```
     NODE_ENV=production
-    PORT=5030
+    PORT=5040
     ```
 1. Install node modules for server
     ```
@@ -273,19 +273,19 @@ To use this app, you need to run the frontend and backend.
 ### Set up pm2
 1. Go into the project directory
     ```
-    cd ~/secondmetrics
+    cd ~/coronavirus
     ```
 1. Set up pm2 to set up the project (using the npm run start script)
     ```
-    pm2 start npm --name "secondmetrics" -- start
+    pm2 start npm --name "coronavirus" -- start
     ```
 1. You can see logs
     ```
-    pm2 logs secondmetrics
+    pm2 logs coronavirus
     ```
 1. If you need to remove it
     ```
-    pm2 delete secondmetrics
+    pm2 delete coronavirus
     ```
 
 ### Set up database
@@ -296,11 +296,11 @@ To use this app, you need to run the frontend and backend.
     ```
 1. Create database
     ```
-    createdb secondmetrics
+    createdb coronavirus
     ```
-1. Connecto to the secondmetrics database
+1. Connecto to the coronavirus database
     ```
-    psql -U secondmetrics
+    psql -U coronavirus
     ```
 1. Show databases and tables
     ```
@@ -310,7 +310,7 @@ To use this app, you need to run the frontend and backend.
 
 ## Roadmap
 
-https://github.com/mrn3/secondmetrics/projects/2
+https://github.com/mrn3/coronavirus/projects/2
 
 ## Sequelize commands
 

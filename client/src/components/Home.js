@@ -82,43 +82,11 @@ export default function Home(props) {
 			<div className={styles.smallContainer}>
 				<div className={styles.blockCenter}>
 					<div className={styles.title}>
-						54% of SEO Campaigns Lose Money
+						Welcome To Coronavirus Stats!
 					</div>
 					<div className={styles.subtitle}>
-						We help small business owners quickly discover if their
-						existing SEO campaigns have a positive ROI
-					</div>
-					<div className={styles.row}>
-						<FormControl variant="outlined" className={styles.formControl}>
-							<TextField
-								id="outlined-url-input"
-								label="Enter Your Website Address"
-								className={styles.textField}
-								type="url"
-								name="url"
-								value={url}
-								onChange={handleUrlChange}
-								onBlur={handleUrlBlur}
-								autoComplete="url"
-								margin="normal"
-								variant="outlined"
-								error={urlInvalid}
-								helperText={
-									urlInvalid
-										? "Website Address must be a valid URL (e.g., http://www.some-site.com)"
-										: ""
-								}
-							/>
-						</FormControl>
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={goToAnalyze}
-							className={styles.actionButton}
-							disabled={!url || urlInvalid}
-						>
-							Get Started
-						</Button>
+						Use the menu above to find all kinds of statistics 
+						about Coronavirus (COVID-19).
 					</div>
 				</div>
 			</div>

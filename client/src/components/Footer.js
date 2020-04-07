@@ -42,8 +42,8 @@ export default function Footer(props) {
                         <div className={styles.linkHeader}>
                             About
                         </div>
-                        <Link to='/how-it-works' className={styles.link}>
-                            How It Works
+                        <Link to='/country-cases' className={styles.link}>
+                            Country Cases
                         </Link>
                         <br />
                         <Link to='/our-story' className={styles.link}>

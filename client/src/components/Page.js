@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 	backgroundGraphic: {
 		backgroundImage: `url(${Background})`,
 		width: '100%',
-		height: 406
+		height: 700
 	}
 }));
 

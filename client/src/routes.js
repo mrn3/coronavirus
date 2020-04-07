@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Router, Switch } from "react-router-dom";
 
 import Home from "./components/Home";
-import HowItWorks from "./components/HowItWorks";
+import CountryCases from "./components/CountryCases";
 import OurStory from "./components/OurStory";
 import Privacy from "./components/Privacy";
 import Terms from "./components/Terms";
@@ -32,7 +32,7 @@ export default props => {
 		<Router history={history}>
 			<Switch>
 				<Route exact path="/" component={Home} />
-				<Route exact path="/how-it-works" component={HowItWorks} />
+				<Route exact path="/country-cases" component={CountryCases} />
 				<Route exact path="/our-story" component={OurStory} />
 				<Route exact path="/analyze/business" component={Business} />
 				<Route exact path="/analyze/revenue" component={Revenue} />

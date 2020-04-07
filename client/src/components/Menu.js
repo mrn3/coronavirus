@@ -4,8 +4,8 @@ const Menu = [
         pathname: "/"
     },
     {
-        label: "How It Works",
-        pathname: "/how-it-works"
+        label: "Country Cases",
+        pathname: "/country-cases"
     },
     {
         label: "Our Story",

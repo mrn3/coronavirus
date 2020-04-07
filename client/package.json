@@ -1,8 +1,8 @@
 {
-  "name": "secondmetrics",
+  "name": "coronavirus",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5030/",
+  "proxy": "http://localhost:5040/",
   "dependencies": {
     "@material-ui/core": "^4.4.0",
     "@material-ui/icons": "^4.2.1",
@@ -17,6 +17,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
     "recharts": "^1.7.1",
+    "unirest": "^0.6.0",
     "use-async-effect": "^2.2.1"
   },
   "scripts": {
