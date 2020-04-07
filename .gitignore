@@ -1,0 +1,9 @@
+package-lock.json
+node_modules/
+cloudformation.json
+*.sublime-workspace
+.DS_Store
+*.swp
+npm-debug.log
+client/node_modules
+.env
