@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Router, Switch } from "react-router-dom";
+import { Route, Router, Switch, Redirect } from "react-router-dom";
 
 import Home from "./components/Home";
 import ByCountry from "./components/ByCountry";
@@ -23,6 +23,9 @@ export default props => {
 	return (
 		<Router history={history}>
 			<Switch>
+				<Route exact path="/">
+					<Redirect to="/coronavirus" />
+				</Route>
 				<Route exact path="/coronavirus/" component={Home} />
 				<Route exact path="/coronavirus/by-country" component={ByCountry} />
 				<Route exact path="/coronavirus/by-state" component={ByState} />
