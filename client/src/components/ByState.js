@@ -64,7 +64,8 @@ const ByState = (props) => {
 
     const getDateArray = statArray => {
         let returnDateArray = [];
-        for (let stat of statArray) {
+        let stat;
+        for (stat of statArray) {
             if (!returnDateArray.includes(stat.date)) {
                 returnDateArray.push(stat.date);
             }
@@ -77,7 +78,8 @@ const ByState = (props) => {
 
     const getStateArray = statArray => {
         let returnStateArray = [];
-        for (let stat of statArray) {
+        let stat;
+        for (stat of statArray) {
             if (!returnStateArray.includes(stat.state)) {
                 returnStateArray.push(stat.state);
             }
@@ -90,7 +92,8 @@ const ByState = (props) => {
     const getMaxDate = statArray => {
         let returnMaxDate = "";
         if (statArray && statArray.length) {
-            for (let stat of statArray) {
+            let stat;
+            for (stat of statArray) {
                 if (stat.date > returnMaxDate) {
                     returnMaxDate = stat.date;
                 }

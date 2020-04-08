@@ -55,16 +55,19 @@ const Projections = (props) => {
     const [projectFutureDays, setProjectFutureDays] = React.useState(7);
     const [shown, setShown] = React.useState({
         cases: true,
-        casesLinear: true,
-        casesPercentage: true,
+        casesNeutral: true,
+        casesPessimistic: true,
+        casesOptimistic: true,
         deaths: false,
-        deathsLinear: false,
-        deathsPercentage: false
+        deathsNeutral: false,
+        deathsPessimistic: false,
+        deathsOptimistic: false
     });
 
     const getStateArray = statArray => {
         let returnStateArray = [];
-        for (let stat of statArray) {
+        let stat;
+        for (stat of statArray) {
             if (!returnStateArray.includes(stat.state)) {
                 returnStateArray.push(stat.state);
             }
@@ -77,7 +80,8 @@ const Projections = (props) => {
     const getMaxDate = statArray => {
         let returnMaxDate = "";
         if (statArray && statArray.length) {
-            for (let stat of statArray) {
+            let stat;
+            for (stat of statArray) {
                 if (stat.date > returnMaxDate) {
                     returnMaxDate = stat.date;
                 }
@@ -118,22 +122,31 @@ const Projections = (props) => {
     };
     const actualsLineChartRowArray = getActualsLineChartRowArray(statArray);
 
-    let casesPerDayLinear;
-    let deathsPerDayLinear;
-    let casesPerDayPercentage;
-    let deathsPerDayPercentage;
+    let casesPerDayNeutral;
+    let deathsPerDayNeutral;
+    let casesPerDayPessimistic;
+    let deathsPerDayPessimistic;
+    let casesPerDayOneDayPessimistic;
+    let deathsPerDayOneDayPessimistic;
 
-    let casesLinearLabel;
-    let deathsLinearLabel;
-    let casesPercentageLabel;
-    let deathsPercentageLabel;
+    let casesNeutralLabel;
+    let deathsNeutralLabel;
+    let casesPessimisticLabel;
+    let deathsOptimisticLabel;
+    let deathsPessimisticLabel;
+    let casesOptimisticLabel;
 
     const getProjectionLineChartRowArray = statArray => {
         let returnProjectionLineChartRowArray = [];
+        let projectOneDay = 1;
         let maxDate = getMaxDate(statArray);
         let maxDateMoment = moment(maxDate);
         let maxDateMinusMoment = moment(maxDateMoment).subtract(
             projectLastDays,
+            "days"
+        );
+        let maxDateMinusOneDayMoment = moment(maxDateMoment).subtract(
+            projectOneDay,
             "days"
         );
 
@@ -146,48 +159,80 @@ const Projections = (props) => {
         let maxDateDeaths = 0;
         let maxDateMinusCases = 0;
         let maxDateMinusDeaths = 0;
-        for (let stat of statArray) {
+        let maxDateMinusOneDayCases = 0;
+        let maxDateMinusOneDayDeaths = 0;
+        let stat;
+        for (stat of statArray) {
             if (stat.state === selectedState) {
                 if (maxDateMoment.isSame(stat.date)) {
                     maxDateCases = stat.cases;
                     maxDateDeaths = stat.deaths;
-                } else if (maxDateMinusMoment.isSame(stat.date)) {
+                }
+                if (maxDateMinusMoment.isSame(stat.date)) {
                     maxDateMinusCases = stat.cases;
                     maxDateMinusDeaths = stat.deaths;
                 }
+                if (maxDateMinusOneDayMoment.isSame(stat.date)) {
+                    maxDateMinusOneDayCases = stat.cases;
+                    maxDateMinusOneDayDeaths = stat.deaths;
+                }
             }
         }
-        casesPerDayLinear = Math.round(
+        casesPerDayNeutral = Math.round(
             (maxDateCases - maxDateMinusCases) / projectLastDays
         );
-        deathsPerDayLinear = Math.round(
+        deathsPerDayNeutral = Math.round(
             (maxDateDeaths - maxDateMinusDeaths) / projectLastDays
         );
-        casesPerDayPercentage =
+        casesPerDayPessimistic =
             1 +
             (maxDateCases - maxDateMinusCases) /
             (maxDateMinusCases || 1) /
             projectLastDays;
-        deathsPerDayPercentage =
+        deathsPerDayPessimistic =
             1 +
             (maxDateDeaths - maxDateMinusDeaths) /
             (maxDateMinusDeaths || 1) /
             projectLastDays;
+        casesPerDayOneDayPessimistic =
+            1 +
+            (maxDateCases - maxDateMinusOneDayCases) /
+            (maxDateMinusOneDayCases || 1) /
+            projectOneDay;
+        deathsPerDayOneDayPessimistic =
+            1 +
+            (maxDateDeaths - maxDateMinusOneDayDeaths) /
+            (maxDateMinusOneDayDeaths || 1) /
+            projectOneDay;
 
-        casesLinearLabel = `Projected Cases Linear (${casesPerDayLinear}/day)`;
-        deathsLinearLabel = `Projected Deaths Linear (${deathsPerDayLinear}/day)`;
-        casesPercentageLabel = `Projected Cases Percentage (${Math.round(
-            (casesPerDayPercentage - 1) * 100
+        let casesPerDayOptimistic = casesPerDayPessimistic - casesPerDayOneDayPessimistic;
+        let deathsPerDayOptimistic = deathsPerDayPessimistic - deathsPerDayOneDayPessimistic;
+
+        casesNeutralLabel = `Projected Cases Neutral (${casesPerDayNeutral}/day)`;
+        deathsNeutralLabel = `Projected Deaths Neutral (${deathsPerDayNeutral}/day)`;
+        casesPessimisticLabel = `Projected Cases Pessimistic (${Math.round(
+            (casesPerDayPessimistic - 1) * 100
         )}%/day)`;
-        deathsPercentageLabel = `Projected Deaths Percentage (${Math.round(
-            (deathsPerDayPercentage - 1) * 100
+        deathsPessimisticLabel = `Projected Deaths Pessimistic (${Math.round(
+            (deathsPerDayPessimistic - 1) * 100
+        )}%/day)`;
+        casesOptimisticLabel = `Projected Cases Optimistic (${Math.round(
+            -1 * casesPerDayOptimistic * 100
+        )}%/day)`;
+        deathsOptimisticLabel = `Projected Deaths Optimistic (${Math.round(
+            -1 * deathsPerDayOptimistic * 100
         )}%/day)`;
 
         //loop through dates
-        let casesLinear = maxDateCases;
-        let casesPercentage = maxDateCases;
-        let deathsLinear = maxDateDeaths;
-        let deathsPercentage = maxDateDeaths;
+        let casesNeutral = maxDateCases;
+        let casesPessimistic = maxDateCases;
+        let casesOptimistic = maxDateCases;
+        //assume we are half way to flattening the curve
+        let casesOptimisticMax = maxDateCases * 2;
+        let deathsNeutral = maxDateDeaths;
+        let deathsPessimistic = maxDateDeaths;
+        let deathsOptimistic = maxDateDeaths;
+        let deathsOptimisticMax = maxDateDeaths * 2;
         for (
             let m = moment(maxDateMoment);
             m.isBefore(projectionEndDate, "day");
@@ -198,19 +243,31 @@ const Projections = (props) => {
                 state: selectedState,
                 date: currentDate,
                 dateUnix: moment(currentDate).unix(),
-                casesLinear,
-                casesPercentage,
-                deathsLinear,
-                deathsPercentage
+                casesNeutral,
+                casesPessimistic,
+                casesOptimistic,
+                deathsNeutral,
+                deathsPessimistic,
+                deathsOptimistic
             });
 
             //increment last
-            casesLinear += casesPerDayLinear;
-            deathsLinear += deathsPerDayLinear;
-            casesPercentage = Math.round(casesPercentage * casesPerDayPercentage);
-            deathsPercentage = Math.round(
-                deathsPercentage * deathsPerDayPercentage
+            casesNeutral += casesPerDayNeutral;
+            casesPessimistic = Math.round(casesPessimistic * casesPerDayPessimistic);
+            //casesOptimistic = Math.round(casesOptimistic * casesPerDayOptimistic);
+            casesOptimistic = casesOptimistic +
+                (1 - casesOptimistic / casesOptimisticMax) *
+                casesOptimistic * casesPerDayOptimistic;
+            deathsNeutral += deathsPerDayNeutral;
+            deathsPessimistic = Math.round(
+                deathsPessimistic * deathsPerDayPessimistic
             );
+            deathsOptimistic = Math.round(
+                deathsOptimistic * deathsPerDayOptimistic
+            );
+            deathsOptimistic = deathsOptimistic +
+                (1 - deathsOptimistic / deathsOptimisticMax) *
+                deathsOptimistic * deathsPerDayOptimistic;
         }
 
         return returnProjectionLineChartRowArray;
@@ -294,37 +351,37 @@ const Projections = (props) => {
                                 >
                                     <MenuItem key={1} value={1}>
                                         1
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={2} value={2}>
                                         2
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={3} value={3}>
                                         3
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={4} value={4}>
                                         4
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={5} value={5}>
                                         5
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={6} value={6}>
                                         6
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={7} value={7}>
                                         7
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={10} value={10}>
                                         10
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={14} value={14}>
                                         14
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={30} value={30}>
                                         30
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={60} value={60}>
                                         60
-                    </MenuItem>
+                                    </MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -341,37 +398,37 @@ const Projections = (props) => {
                                 >
                                     <MenuItem key={1} value={1}>
                                         1
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={2} value={2}>
                                         2
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={3} value={3}>
                                         3
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={4} value={4}>
                                         4
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={5} value={5}>
                                         5
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={6} value={6}>
                                         6
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={7} value={7}>
                                         7
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={10} value={10}>
                                         10
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={14} value={14}>
                                         14
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={30} value={30}>
                                         30
-                    </MenuItem>
+                                    </MenuItem>
                                     <MenuItem key={60} value={60}>
                                         60
-                    </MenuItem>
+                                    </MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -394,25 +451,37 @@ const Projections = (props) => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={shown.casesLinear}
+                                        checked={shown.casesPessimistic}
                                         onChange={handleShownChange}
-                                        name="casesLinear"
+                                        name="casesPessimistic"
                                         color="primary"
                                     />
                                 }
-                                label={casesLinearLabel}
+                                label={casesPessimisticLabel}
                             />
                             <br />
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={shown.casesPercentage}
+                                        checked={shown.casesNeutral}
                                         onChange={handleShownChange}
-                                        name="casesPercentage"
+                                        name="casesNeutral"
                                         color="primary"
                                     />
                                 }
-                                label={casesPercentageLabel}
+                                label={casesNeutralLabel}
+                            />
+                            <br />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.casesOptimistic}
+                                        onChange={handleShownChange}
+                                        name="casesOptimistic"
+                                        color="primary"
+                                    />
+                                }
+                                label={casesOptimisticLabel}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -432,33 +501,42 @@ const Projections = (props) => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={shown.deathsLinear}
+                                        checked={shown.deathsPessimistic}
                                         onChange={handleShownChange}
-                                        name="deathsLinear"
+                                        name="deathsPessimistic"
                                         color="primary"
                                     />
                                 }
-                                label={deathsLinearLabel}
+                                label={deathsPessimisticLabel}
                             />
                             <br />
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={shown.deathsPercentage}
+                                        checked={shown.deathsNeutral}
                                         onChange={handleShownChange}
-                                        name="deathsPercentage"
+                                        name="deathsNeutral"
                                         color="primary"
                                     />
                                 }
-                                label={deathsPercentageLabel}
+                                label={deathsNeutralLabel}
+                            />
+                            <br />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.deathsOptimistic}
+                                        onChange={handleShownChange}
+                                        name="deathsOptimistic"
+                                        color="primary"
+                                    />
+                                }
+                                label={deathsOptimisticLabel}
                             />
                         </Grid>
                     </Grid>
-
                     <Grid item xs={12} sm={9} style={{ overflow: "scroll", height: 800 }}>
-
                         <Grid container spacing={3}>
-
                             <Grid item xs={12} sm={12}>
                                 <ResponsiveContainer width="100%" aspect={15.0 / 9.0}>
                                     <LineChart
@@ -469,6 +547,7 @@ const Projections = (props) => {
                                             left: 20,
                                             bottom: 5
                                         }}
+                                        width={500} height={300}
                                     >
                                         <XAxis
                                             dataKey="dateUnix"
@@ -486,7 +565,6 @@ const Projections = (props) => {
                                             verticalAlign="top"
                                             align="center"
                                         />
-
                                         {shown.cases && (
                                             <Line
                                                 name="Actual Cases"
@@ -497,25 +575,35 @@ const Projections = (props) => {
                                                 dot={<div></div>}
                                             />
                                         )}
-
-                                        {shown.casesLinear && (
+                                        {shown.casesPessimistic && (
                                             <Line
-                                                name={casesLinearLabel}
+                                                name={casesPessimisticLabel}
                                                 type="monotone"
-                                                dataKey="casesLinear"
+                                                dataKey="casesPessimistic"
                                                 strokeDasharray="5 5"
-                                                stroke="#f80"
+                                                stroke="#e33"
                                                 strokeWidth={2}
                                                 dot={<div></div>}
                                             />
                                         )}
-                                        {shown.casesPercentage && (
+                                        {shown.casesNeutral && (
                                             <Line
-                                                name={casesPercentageLabel}
+                                                name={casesNeutralLabel}
                                                 type="monotone"
-                                                dataKey="casesPercentage"
+                                                dataKey="casesNeutral"
                                                 strokeDasharray="5 5"
-                                                stroke="#f80"
+                                                stroke="#fd3"
+                                                strokeWidth={2}
+                                                dot={<div></div>}
+                                            />
+                                        )}
+                                        {shown.casesOptimistic && (
+                                            <Line
+                                                name={casesOptimisticLabel}
+                                                type="monotone"
+                                                dataKey="casesOptimistic"
+                                                strokeDasharray="5 5"
+                                                stroke="#7b4"
                                                 strokeWidth={2}
                                                 dot={<div></div>}
                                             />
@@ -525,29 +613,39 @@ const Projections = (props) => {
                                                 name="Actual Deaths"
                                                 type="monotone"
                                                 dataKey="deaths"
-                                                stroke="#e33"
+                                                stroke="#f51"
                                                 strokeWidth={2}
                                                 dot={<div></div>}
                                             />
                                         )}
-                                        {shown.deathsLinear && (
+                                        {shown.deathsPessimistic && (
                                             <Line
-                                                name={deathsLinearLabel}
+                                                name={deathsPessimisticLabel}
                                                 type="monotone"
-                                                dataKey="deathsLinear"
+                                                dataKey="deathsPessimistic"
                                                 stroke="#e33"
                                                 strokeDasharray="5 5"
                                                 strokeWidth={2}
                                                 dot={<div></div>}
                                             />
                                         )}
-
-                                        {shown.deathsPercentage && (
+                                        {shown.deathsNeutral && (
                                             <Line
-                                                name={deathsPercentageLabel}
+                                                name={deathsNeutralLabel}
                                                 type="monotone"
-                                                dataKey="deathsPercentage"
-                                                stroke="#e33"
+                                                dataKey="deathsNeutral"
+                                                stroke="#fd3"
+                                                strokeDasharray="5 5"
+                                                strokeWidth={2}
+                                                dot={<div></div>}
+                                            />
+                                        )}
+                                        {shown.deathsOptimistic && (
+                                            <Line
+                                                name={deathsOptimisticLabel}
+                                                type="monotone"
+                                                dataKey="deathsOptimistic"
+                                                stroke="#7b4"
                                                 strokeDasharray="5 5"
                                                 strokeWidth={2}
                                                 dot={<div></div>}
@@ -557,7 +655,13 @@ const Projections = (props) => {
                                 </ResponsiveContainer>
                             </Grid>
                         </Grid>
-
+                        <ul>
+                            <li>Pessimistic is based on the average percentage daily difference in the last N days</li>
+                            <li>Netural is linear based on average daily difference in last N days</li>
+                            <li>Optimistic assumes a flattening of the curve at 2X where it curently is,
+                            and is based on the difference between the average percentage increase in the last N days
+                                and the percentage increase since yesterday</li>
+                        </ul>
                     </Grid>
                 </Grid>
             </div>

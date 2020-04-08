@@ -61,7 +61,8 @@ const DailyChanges = (props) => {
 
     const getStateArray = statArray => {
         let returnStateArray = [];
-        for (let stat of statArray) {
+        let stat;
+        for (stat of statArray) {
             if (!returnStateArray.includes(stat.state)) {
                 returnStateArray.push(stat.state);
             }
