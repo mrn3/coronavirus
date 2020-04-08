@@ -113,6 +113,7 @@ const ByCountry = (props) => {
     const sortAscending = sortBy === 'name' ? -1 : 1;
 
     const rows = stats
+        .filter(stat => stat.country !== 'World')
         .map(stat => {
             return getStatObject(stat);
         })
@@ -121,7 +122,7 @@ const ByCountry = (props) => {
     //just get top 10
     const chartRows = stats
         .slice(0, 10)
-        .filter(stat => stat.country !== "All")
+        .filter(stat => stat.country !== 'World' && stat.country !== 'All')
         .map(stat => {
             return getStatObject(stat);
         })

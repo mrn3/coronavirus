@@ -49,6 +49,9 @@ export default function Footer(props) {
                         <Link to='/coronavirus/by-state' className={styles.link}>
                             By State
                         </Link>
+                        <Link to='/coronavirus/daily-changes' className={styles.link}>
+                            Daily Changes
+                        </Link>
                         <br />
 
                     </div>

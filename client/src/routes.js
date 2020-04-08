@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import ByCountry from "./components/ByCountry";
 import ByState from "./components/ByState";
 import Projections from "./components/Projections";
+import DailyChanges from "./components/DailyChanges";
 
 import { createBrowserHistory } from "history"
 import ReactGA from 'react-ga'
@@ -30,6 +31,7 @@ export default props => {
 				<Route exact path="/coronavirus/by-country" component={ByCountry} />
 				<Route exact path="/coronavirus/by-state" component={ByState} />
 				<Route exact path="/coronavirus/projections" component={Projections} />
+				<Route exact path="/coronavirus/daily-changes" component={DailyChanges} />
 			</Switch>
 		</Router>
 	)

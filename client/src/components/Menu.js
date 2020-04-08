@@ -14,6 +14,10 @@ const Menu = [
     {
         label: "Projections",
         pathname: "/coronavirus/projections"
+    },
+    {
+        label: "Daily Changes",
+        pathname: "/coronavirus/daily-changes"
     }
 ];
 
