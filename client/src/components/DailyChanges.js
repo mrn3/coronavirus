@@ -51,14 +51,12 @@ const DailyChanges = (props) => {
     const currentPath = props.location.pathname;
     const [statArray, setStatArray] = useState([]);
     const classes = useStyles();
-    const [selectedState, setSelectedState] = React.useState("Alabama");
+    const [selectedState, setSelectedState] = React.useState('Alabama');
     const [shown, setShown] = React.useState({
-        cases: true,
-        casesLinear: true,
-        casesPercentage: true,
+        cases: false,
+        casesDailyChange: true,
         deaths: false,
-        deathsLinear: false,
-        deathsPercentage: false
+        deathsDailyChange: false
     });
 
     const getStateArray = statArray => {
@@ -87,7 +85,7 @@ const DailyChanges = (props) => {
         let currentDeaths = 0;
         let previousDeaths = 0;
         return statArray
-            .filter(stat => stat.state === selectedState)
+            .filter(stat => selectedState === stat.state)
             .map(stat => {
                 currentCases = stat.cases;
                 currentDeaths = stat.deaths;
@@ -158,9 +156,6 @@ const DailyChanges = (props) => {
                                         onChange={handleSelectedStateChange}
                                         label="State"
                                     >
-                                        <MenuItem key="All" value="All">
-                                            All
-                                        </MenuItem>
                                         {stateArray.map(state => (
                                             <MenuItem key={state} value={state}>
                                                 {state}
@@ -172,18 +167,6 @@ const DailyChanges = (props) => {
                         </Grid>
                         <h2>Show</h2>
                         <Grid item xs={12}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={shown.cases}
-                                        onChange={handleShownChange}
-                                        name="cases"
-                                        color="primary"
-                                    />
-                                }
-                                label="Cumulative Cases"
-                            />
-                            <br />
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -199,13 +182,13 @@ const DailyChanges = (props) => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={shown.deaths}
+                                        checked={shown.cases}
                                         onChange={handleShownChange}
-                                        name="deaths"
+                                        name="cases"
                                         color="primary"
                                     />
                                 }
-                                label="Cumulative Deaths"
+                                label="Cumulative Cases"
                             />
                             <br />
                             <FormControlLabel
@@ -218,6 +201,18 @@ const DailyChanges = (props) => {
                                     />
                                 }
                                 label="Deaths Daily Change"
+                            />
+                            <br />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={shown.deaths}
+                                        onChange={handleShownChange}
+                                        name="deaths"
+                                        color="primary"
+                                    />
+                                }
+                                label="Cumulative Deaths"
                             />
                         </Grid>
                     </Grid>

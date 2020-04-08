@@ -130,90 +130,89 @@ const Projections = (props) => {
 
     const getProjectionLineChartRowArray = statArray => {
         let returnProjectionLineChartRowArray = [];
-        if (selectedState !== "All") {
-            let maxDate = getMaxDate(statArray);
-            let maxDateMoment = moment(maxDate);
-            let maxDateMinusMoment = moment(maxDateMoment).subtract(
-                projectLastDays,
-                "days"
-            );
+        let maxDate = getMaxDate(statArray);
+        let maxDateMoment = moment(maxDate);
+        let maxDateMinusMoment = moment(maxDateMoment).subtract(
+            projectLastDays,
+            "days"
+        );
 
-            let projectionEndDate = moment()
-                .add(projectFutureDays, "days")
-                .format("YYYY-MM-DD");
+        let projectionEndDate = moment()
+            .add(projectFutureDays, "days")
+            .format("YYYY-MM-DD");
 
-            //get the start and end values to calculate slope
-            let maxDateCases = 0;
-            let maxDateDeaths = 0;
-            let maxDateMinusCases = 0;
-            let maxDateMinusDeaths = 0;
-            for (let stat of statArray) {
-                if (stat.state === selectedState) {
-                    if (maxDateMoment.isSame(stat.date)) {
-                        maxDateCases = stat.cases;
-                        maxDateDeaths = stat.deaths;
-                    } else if (maxDateMinusMoment.isSame(stat.date)) {
-                        maxDateMinusCases = stat.cases;
-                        maxDateMinusDeaths = stat.deaths;
-                    }
+        //get the start and end values to calculate slope
+        let maxDateCases = 0;
+        let maxDateDeaths = 0;
+        let maxDateMinusCases = 0;
+        let maxDateMinusDeaths = 0;
+        for (let stat of statArray) {
+            if (stat.state === selectedState) {
+                if (maxDateMoment.isSame(stat.date)) {
+                    maxDateCases = stat.cases;
+                    maxDateDeaths = stat.deaths;
+                } else if (maxDateMinusMoment.isSame(stat.date)) {
+                    maxDateMinusCases = stat.cases;
+                    maxDateMinusDeaths = stat.deaths;
                 }
             }
-            casesPerDayLinear = Math.round(
-                (maxDateCases - maxDateMinusCases) / projectLastDays
-            );
-            deathsPerDayLinear = Math.round(
-                (maxDateDeaths - maxDateMinusDeaths) / projectLastDays
-            );
-            casesPerDayPercentage =
-                1 +
-                (maxDateCases - maxDateMinusCases) /
-                (maxDateMinusCases || 1) /
-                projectLastDays;
-            deathsPerDayPercentage =
-                1 +
-                (maxDateDeaths - maxDateMinusDeaths) /
-                (maxDateMinusDeaths || 1) /
-                projectLastDays;
-
-            casesLinearLabel = `Projected Cases Linear (${casesPerDayLinear}/day)`;
-            deathsLinearLabel = `Projected Deaths Linear (${deathsPerDayLinear}/day)`;
-            casesPercentageLabel = `Projected Cases Percentage (${Math.round(
-                (casesPerDayPercentage - 1) * 100
-            )}%/day)`;
-            deathsPercentageLabel = `Projected Deaths Percentage (${Math.round(
-                (deathsPerDayPercentage - 1) * 100
-            )}%/day)`;
-
-            //loop through dates
-            let casesLinear = maxDateCases;
-            let casesPercentage = maxDateCases;
-            let deathsLinear = maxDateDeaths;
-            let deathsPercentage = maxDateDeaths;
-            for (
-                let m = moment(maxDateMoment);
-                m.isBefore(projectionEndDate, "day");
-                m.add(1, "days")
-            ) {
-                let currentDate = m.format("YYYY-MM-DD");
-                returnProjectionLineChartRowArray.push({
-                    state: selectedState,
-                    date: currentDate,
-                    dateUnix: moment(currentDate).unix(),
-                    casesLinear,
-                    casesPercentage,
-                    deathsLinear,
-                    deathsPercentage
-                });
-
-                //increment last
-                casesLinear += casesPerDayLinear;
-                deathsLinear += deathsPerDayLinear;
-                casesPercentage = Math.round(casesPercentage * casesPerDayPercentage);
-                deathsPercentage = Math.round(
-                    deathsPercentage * deathsPerDayPercentage
-                );
-            }
         }
+        casesPerDayLinear = Math.round(
+            (maxDateCases - maxDateMinusCases) / projectLastDays
+        );
+        deathsPerDayLinear = Math.round(
+            (maxDateDeaths - maxDateMinusDeaths) / projectLastDays
+        );
+        casesPerDayPercentage =
+            1 +
+            (maxDateCases - maxDateMinusCases) /
+            (maxDateMinusCases || 1) /
+            projectLastDays;
+        deathsPerDayPercentage =
+            1 +
+            (maxDateDeaths - maxDateMinusDeaths) /
+            (maxDateMinusDeaths || 1) /
+            projectLastDays;
+
+        casesLinearLabel = `Projected Cases Linear (${casesPerDayLinear}/day)`;
+        deathsLinearLabel = `Projected Deaths Linear (${deathsPerDayLinear}/day)`;
+        casesPercentageLabel = `Projected Cases Percentage (${Math.round(
+            (casesPerDayPercentage - 1) * 100
+        )}%/day)`;
+        deathsPercentageLabel = `Projected Deaths Percentage (${Math.round(
+            (deathsPerDayPercentage - 1) * 100
+        )}%/day)`;
+
+        //loop through dates
+        let casesLinear = maxDateCases;
+        let casesPercentage = maxDateCases;
+        let deathsLinear = maxDateDeaths;
+        let deathsPercentage = maxDateDeaths;
+        for (
+            let m = moment(maxDateMoment);
+            m.isBefore(projectionEndDate, "day");
+            m.add(1, "days")
+        ) {
+            let currentDate = m.format("YYYY-MM-DD");
+            returnProjectionLineChartRowArray.push({
+                state: selectedState,
+                date: currentDate,
+                dateUnix: moment(currentDate).unix(),
+                casesLinear,
+                casesPercentage,
+                deathsLinear,
+                deathsPercentage
+            });
+
+            //increment last
+            casesLinear += casesPerDayLinear;
+            deathsLinear += deathsPerDayLinear;
+            casesPercentage = Math.round(casesPercentage * casesPerDayPercentage);
+            deathsPercentage = Math.round(
+                deathsPercentage * deathsPerDayPercentage
+            );
+        }
+
         return returnProjectionLineChartRowArray;
     };
     const projectionLineChartRowArray = getProjectionLineChartRowArray(statArray);
@@ -273,9 +272,6 @@ const Projections = (props) => {
                                         onChange={handleSelectedStateChange}
                                         label="State"
                                     >
-                                        <MenuItem key="All" value="All">
-                                            All
-                                        </MenuItem>
                                         {stateArray.map(state => (
                                             <MenuItem key={state} value={state}>
                                                 {state}
