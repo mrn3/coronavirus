@@ -656,11 +656,11 @@ const Projections = (props) => {
                             </Grid>
                         </Grid>
                         <ul>
-                            <li>Pessimistic is based on the average percentage daily difference in the last N days</li>
-                            <li>Netural is linear based on average daily difference in last N days</li>
+                            <li>Pessimistic is based on the average daily percentage change in the last N days</li>
+                            <li>Netural is linear and based on the average daily change in the last N days</li>
                             <li>Optimistic assumes a flattening of the curve at 2X where it curently is,
-                            and is based on the difference between the average percentage increase in the last N days
-                                and the percentage increase since yesterday</li>
+                                and is based on the difference between the average daily percentage change in the last N days
+                                and the daily percentage change since yesterday</li>
                         </ul>
                     </Grid>
                 </Grid>
